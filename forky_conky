@@ -1,85 +1,66 @@
-background yes
-use_xft yes
-xftfont Roboto:size=9
-xftalpha 0.8
-update_interval 1
-total_run_times 0
-own_window yes
-own_window_transparent no
-##############################################
-# Compositing tips:
-# Conky can play strangely when used with
-# different compositors. I have found the
-# following to work well, but your mileage
-# may vary. Comment/uncomment to suit.
-##############################################
-## no compositor
-own_window_type override
-own_window_argb_visual yes
+conky.config = {
+	background = true,
+	use_xft = true,
+    font = 'DejaVu Sans Mono:size=12',
+	xftalpha = 0.8,
+	update_interval = 1.0,
+	own_window = true,
+	own_window_transparent = true,
+	own_window_type = 'override',
+	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+	double_buffer = true,
+	draw_shades = false,
+	draw_outline = false,
+	draw_borders = false,
+	draw_graph_borders = false,
+	stippled_borders = 0,
+	border_width = 1,
+	default_color = 'white',
+	default_shade_color = 'white',
+	default_outline_color = 'white',
+	alignment = 'top_right',
+	minimum_height = 768,
+	minimum_width = 370,
+	maximum_width = 1000,
+	gap_x = 0,
+	gap_y = 0,
+	no_buffers = true,
+	uppercase = false,
+	cpu_avg_samples = 2,
+	net_avg_samples = 2,
+	short_units = true,
+	text_buffer_size = 2048,
+	use_spacer = 'none',
+	override_utf8_locale = true,
+	own_window_argb_value = 51,
+	own_window_colour = '000000',
 
-## xcompmgr
-#own_window_type override
-#own_window_argb_visual yes
+	color1 = '0778ec',
+	color2 = '009215',
 
-## cairo-compmgr
-own_window_type dock
-own_window_argb_visual yes
-##############################################
-own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
-double_buffer yes
-draw_shades no
-draw_outline no
-draw_borders no
-draw_graph_borders no
-stippled_borders 0
-border_margin 5
-border_width 1
-default_color white
-default_shade_color 000000
-default_outline_color 000000
-alignment top_right
-minimum_size 370 768
-maximum_width 1000
-gap_x 0
-gap_y 0
-no_buffers yes
-uppercase no
-cpu_avg_samples 2
-net_avg_samples 2
-short_units yes
-text_buffer_size 2048
-use_spacer none
-override_utf8_locale yes
-own_window_argb_value 51
-own_window_colour 000000
+	lua_load = 'head.lua',
+	lua_draw_hook_pre = 'draw_text1',
+};
 
-color1 0778ec
-color2 red
-color3 green
-color4 24BDB4
-
-
-lua_load head.lua
-lua_draw_hook_post draw_text1
-
-TEXT
-###Time & Day
+conky.text = [[
+##Time & Day
 ${voffset 76}${offset 60}${font LG Weather_Z:size=75}${time %H:%M}
-${voffset -15}${offset 79}${font Aliquam:bold:size=20}${time %A, %d }
-${voffset }${offset 77}${font Aliquam:bold:size=23}${time %B }
+${voffset -15}${offset 79}${font Aliquam:weight=Bold:size=20}${time %A, %d }
+${voffset }${offset 77}${font Aliquam:weight=Bold:size=23}${time %B }
 
 ###Systems
-${voffset -6}${offset 79}${font Aliquam:bold:size=11}$nodename
+${voffset -6}${offset 79}${font Aliquam:size=11:weight=Bold}${nodename} on ${addr wlp2s0}
 ${voffset 2}${offset 79}Cpu: ${cpu cpu1}%
 ${voffset 2}${offset 79}Ram: $memperc %
-${voffset 2}${offset 79}Temp: ${hwmon 0 temp 1} 'c
+${voffset 2}${offset 79}Temp: ${hwmon 0 temp 1} °C
 ${voffset 2}${offset 79}Wifi: ${wireless_link_qual wlp2s0}%${font}
 
 ##Spotify
 ${if_running spotify}
-${voffset 12}${offset 79}${font Aliquam:bold:size=10}${execi 3 dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 1 "title"|egrep -v "title"|cut -b 44-|cut -d '"' -f 1|egrep -v ^$ }
+${voffset 12}${offset 79}${font Aliquam:size=10:weight=Bold}${execi 3 dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 1 "title"|egrep -v "title"|cut -b 44-|cut -d '"' -f 1|egrep -v ^$ }
 ${voffset 10}${offset 79}${execi 3 dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 2 "artist"|egrep -v "artist"|egrep -v "array"|cut -b 27-|cut -d '"' -f 1|egrep -v ^$ }
 ${voffset 10}${offset 79}${execi 3 dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 1 "album"|egrep -v "album"|cut -b 44-|cut -d '"' -f 1|egrep -v ^$ }${font}
 
-${else}${voffset 25}${offset 79}${font Aliquam:bold:size=10}Spotify: ${color4}off${color}
+${else}${voffset 25}${offset 79}${font Aliquam:size=10:weight=Bold}Spotify: ${color1}off${color}
 ${endif}
+]]
