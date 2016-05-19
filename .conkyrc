@@ -40,7 +40,7 @@ conky.config = {
 	color1 = '18DACF',
 	color2 = 'D9A0B0',
 
-	lua_load = '~/.forky_conky/lua.lua',
+	lua_load = '~/forky_conky/lua.lua',
 	lua_draw_hook_post = 'drawing',
 }
 
