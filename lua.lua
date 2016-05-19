@@ -51,11 +51,15 @@ v1.1    10/06/2010    Add "orientation" parameter
 v1.2    15/06/2010  Add "h_align", "v_align" and "radial" parameters
 
 ]]
+
+--[[ A little note by ripelascra
+If you prefer color2 to color1 in ".conkyrc", you can change the line colors in this file to "colour={{1,0xD9A0B0,1}}" so pinks fit perfectly :) ]]
+
 require 'cairo'
 
 
 --FUNCTION FOR DATE AND TIME
-function conky_draw_text1()
+function conky_drawing()
     text_settings={
         --BEGIN OF PARAMETERS        
         {
@@ -76,7 +80,7 @@ function conky_draw_text1()
         font_name="monospace",
         bold=true,
         font_size="18",
-        colour={{1,0x24BCB4,1}},
+        colour={{1,0x18DACF,1}},
         orientation="ww",
         angle= -90,
         },     
@@ -98,13 +102,13 @@ function conky_draw_text1()
         font_name="monospace",
         bold=true,
         font_size="18",
-        colour={{1,0x24BCB4,1}},
+        colour={{1,0x18DACF,1}},
         orientation="ww",
         angle= -90,
         },     
  {
         text=conky_parse('System'),
-        x=37,
+        x=36,
         y=416,
         font_name="adele",
         font_size="28",
@@ -120,14 +124,14 @@ function conky_draw_text1()
         font_name="monospace",
         bold=true,
         font_size="18",
-        colour={{1,0x24BCB4,1}},
+        colour={{1,0x18DACF,1}},
         orientation="ww",
         angle= -90,
         },     
 {
-        text=conky_parse('Spotify'),
-        x=37,
-        y=538,
+        text=conky_parse('Music'),
+        x=40,
+        y=536,
         font_name="adele",
         font_size="28",
         bold=true,
@@ -142,7 +146,7 @@ function conky_draw_text1()
         font_name="monospace",
         bold=true,
         font_size="18",
-        colour={{1,0x24BCB4,1}},
+        colour={{1,0x18DACF,1}},
         orientation="ww",
         angle= -90,
         }
@@ -164,157 +168,6 @@ function conky_draw_text1()
     cairo_destroy(cr)
     cairo_surface_destroy(cs)
 end
-
-
-
-
-
-
-
---FUNCTION FOR INFOS TEXT , KERNEL ....
-function conky_draw_text2()
-    local h=0
-    if conky_window ~=nil then h= conky_window.height end
-    text_settings={
-        --BEGIN OF PARAMETERS
---info:
-        {text=conky_parse("$sysname $kernel") .. " * " .. conky_parse("${exec  openbox --version | grep Openbox}") 
-         .. " * Conky " .. conky_version
-         .. " * Up. : " .. conky_parse("${uptime_short}"),
-        angle=-90,
-        font_name="Sans",
-        font_size=12,
-        x=10,
-        y=h-5,
-        --09101a
-        --715dba
-        colour={{1,0xa85d98,0.8},
-            {0,0xf1cee6,0.3}
-            }
-        }  ,
-        
-    }
-    
-    
---------------END OF PARAMETERS----------------
-
-
-    if conky_window == nil then return end
-    if tonumber(conky_parse("$updates"))<3 then return end
-    local cs = cairo_xlib_surface_create(conky_window.display, conky_window.drawable, conky_window.visual, conky_window.width, conky_window.height)
-    cr = cairo_create (cs)
-    
-    for i,v in pairs(text_settings) do
-        display_text(v)
-    end
-    
-    cairo_destroy(cr)
-    cairo_surface_destroy(cs)
-end
-
-
-
-
---FUNCTION FOR CPU MEMORY  ....
-function conky_draw_text3()
-    local cpu=tonumber(conky_parse("$cpu"))
-    if cpu==nil then cpu=0 end 
-    local mem=tonumber(conky_parse("$memperc"))
-    if mem==nil then mem=0 end
-
-    if cpu<10 then cpu = "0" .. cpu end
-    if mem<10 then mem = "0" .. mem end
-    local txt_val="    " .. cpu .. "%       " .. mem ..  conky_parse("%       ${fs_free /home}       ${fs_free /}")
-    local txt_txt="cpu           mem          home                      data"
-    local xpos,ypos=5,0
-    if conky_window ~=nil then ypos = conky_window.height - 5 end
-    text_settings={
-        --BEGIN OF PARAMETERS
-        {text=txt_val,
-        font_name="Clarendon",
-        font_size="48",
-        x=xpos,
-        y=ypos,
-        colour={{0,0x755585,1},{1,0x190f21,0}},
-        orientation="nn",
-
-        },
-        {text=txt_val,
-        font_name="Clarendon",
-        font_size="48",
-        x=xpos-2,
-        y=ypos,
-        colour={{0,0x755585,0.5},{1,0x190f21,0}},
-        orientation="nn",
-        
-        },
-        {text=txt_val,
-        font_name="Clarendon",
-        font_size="48",
-        x=xpos+2,
-        y=ypos,
-        colour={{0,0x755585,0.5},{1,0x190f21,0}},
-        orientation="nn",
-        
-        },
-        {text=txt_txt,
-        font_name="Clarendon",
-        font_size="34",
-        x=xpos,
-        y=ypos,
-        colour={{0,0xd294d6,1},{1,0x190f21,0}},
-        orientation="nn",
-        
-        },
-        {text=txt_txt,
-        font_name="Clarendon",
-        font_size="34",
-        x=xpos+2,
-        y=ypos,
-        colour={{0,0xd294d6,0.5},{1,0x190f21,0}},
-        orientation="nn",
-        
-        },
-        {text=txt_txt,
-        font_name="Clarendon",
-        font_size="34",
-        x=xpos-2,
-        y=ypos,
-        colour={{0,0xd294d6,0.5},{1,0x190f21,0}},
-        orientation="nn",
-        
-        },     
-      
-    }
-    
-    
---------------END OF PARAMETERS----------------
-
-
-    if conky_window == nil then return end
-    if tonumber(conky_parse("$updates"))<3 then return end
-    local cs = cairo_xlib_surface_create(conky_window.display, conky_window.drawable, conky_window.visual, conky_window.width, conky_window.height)
-    cr = cairo_create (cs)
-    
-    for i,v in pairs(text_settings) do
-        display_text(v)
-    end
-    
-    cairo_destroy(cr)
-    cairo_surface_destroy(cs)
-end
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

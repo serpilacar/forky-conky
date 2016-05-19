@@ -1,0 +1,74 @@
+conky.config = {
+	background = true,
+	use_xft = true,
+    font = 'Roboto:size=9',
+	xftalpha = 0.8,
+	update_interval = 1.0,
+	total_run_times = 0,
+	own_window = true,
+	own_window_transparent = false,
+	own_window_type = 'dock',
+	own_window_argb_visual = true,
+	own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+	double_buffer = true,
+	draw_shades = false,
+	draw_outline = false,
+	draw_borders = false,
+	draw_graph_borders = false,
+	stippled_borders = 0,
+	border_width = 1,
+	default_color = 'white',
+	default_shade_color = '000000',
+	default_outline_color = '000000',
+	alignment = 'top_right',
+	minimum_height = 768,
+	minimum_width = 370,
+	maximum_width = 1000,
+	gap_x = 0,
+	gap_y = 0,
+	no_buffers = true,
+	uppercase = false,
+	cpu_avg_samples = 2,
+	net_avg_samples = 2,
+	short_units = true,
+	text_buffer_size = 2048,
+	use_spacer = 'none',
+	override_utf8_locale = true,
+	own_window_argb_value = 26,
+	own_window_colour = '000000',
+
+	color1 = '18DACF',
+	color2 = 'D9A0B0',
+
+	lua_load = '~/.forky_conky/lua.lua',
+	lua_draw_hook_post = 'drawing',
+}
+
+
+conky.text = [[
+
+##Time & Day
+${voffset 59}${offset 66}${font LG Weather_Z:size=75}${time %H:%M}
+${voffset -15}${offset 74}${font Aliquam:weight=Bold:size=20}${time %A, %d }
+${voffset }${offset 77}${font Aliquam:weight=Bold:size=23}${time %B }
+
+###Systems
+${voffset -9}${offset 75}${font Aliquam:size=11:weight=Bold}${nodename} on ${addr wlp2s0}
+${voffset 4}${offset 75}Cpu: $cpu%
+${voffset 4}${offset 75}Ram: $memperc%${font}
+${voffset 6}${offset 73}$color1${font ConkyColors:size=14}7${font}$color${voffset -7}${goto 106}${font Aliquam:size=11:weight=Bold}${hwmon 0 temp 1}°C${font}
+${voffset 6}${offset 75}$color1${font ConkyColors}w${font}$color${voffset -6}${goto 106}${font Aliquam:size=11:weight=Bold}${downspeed wlp2s0}${font}${voffset -3}${goto 173}$color1${font ConkyColors}x${font}$color${voffset -4}${goto 200}${font Aliquam:size=11:weight=Bold}${upspeed wlp2s0}${font}
+
+##spotify/mpd
+${if_running spotify}
+${voffset 2}${offset 79}${font Aliquam:size=10:weight=Bold}${color1}Song: ${color}${execi 3 dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 1 "title"|egrep -v "title"|cut -b 44-|cut -d '"' -f 1|egrep -v ^$ }
+${voffset 10}${offset 79}${color1}Artist: ${color}${execi 3 dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata'|egrep -A 2 "artist"|egrep -v "artist"|egrep -v "array"|cut -b 27-|cut -d '"' -f 1|egrep -v ^$ }#$font
+${else}
+${if_mpd_playing}
+${voffset -12}${offset 76}${font Aliquam:size=10:weight=Bold}${color1}Song: ${color}${mpd_title 40}
+${voffset 7}${offset 76}${color1}Artist: ${color}${mpd_artist 40}
+${voffset 7}${offset 76}${color1}Album: ${color}${mpd_album 40}${font}
+${voffset 7}${offset 78}${color1}${font Aliquam:size=10:weight=Bold}$mpd_elapsed/$mpd_length $color${goto 151}${mpd_bar 5,170}$font
+${else}${voffset 7}${offset 79}${font Aliquam:size=10:weight=Bold}Mpd & Spotify:			${color1}off${color}
+${endif}${endif}
+]]
